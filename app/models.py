@@ -17,7 +17,7 @@ class Image_list(models.Model):
     correct = models.IntegerField(default=-1)
 
     def __str__(self):
-        return str(self.id),self.cate,self.cate,self.sub,str(self.correct)
+        return str(self.id),self.image_path,self.cate,self.cate,self.sub,str(self.correct)
 
 class Cate(models.Model):
     cate = models.CharField(max_length=30)
