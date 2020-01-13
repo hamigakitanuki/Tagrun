@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.db import models
 from django.http.response import JsonResponse,HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import *
 import random
 
