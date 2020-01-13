@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db import models
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse,HttpResponse
 from .models import *
 import random
 
@@ -19,7 +19,11 @@ def get_tag_list(req):
     taging_image = list(taging_image_query.values_list('image_path',flat=True))
     taging_id = list(taging_image_query.values_list('id',flat=True))
     print(taging_image)
-    random_list = random.sample(range(len(taging_image)),k=10)
+    if len(taging_image) < 10:
+        n = len(taging_image)
+    else:
+        n = 10
+    random_list = random.sample(range(len(taging_image)),k=n)
     correct_image_list = list(models.QuerySet(Image_list).filter(sub=sub_selection,correct=1).values_list('image_path',flat=True))
     correct_image = correct_image_list[random.randrange(len(correct_image_list))]
     print(correct_image)
@@ -46,4 +50,12 @@ def get_tag_list(req):
 
 #def get_gatya(req):
 
-#def post_tag_info(req):
+@csrf_exempt
+def post_tag_info(req):
+    image_idx = int(req.POST.get('image_idx'))
+    image_correct = int(req.POST.get('correct'))
+
+    image_obj = models.QuerySet(Image_list).filter(id=image_idx).first()
+    image_obj.correct = image_correct
+    image_obj.save()
+    return HttpResponse('image info update') 
