@@ -30,7 +30,7 @@ def get_tag_list(req):
 
     for  i,idx in enumerate(random_list):
         res_image_list.append(taging_image[idx])
-        res_id_list.append(taging_image[idx])
+        res_id_list.append(taging_id[idx])
     
     d = {
         'res_image_list':res_image_list,
