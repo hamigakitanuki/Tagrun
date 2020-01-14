@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.db import models
 from django.http.response import JsonResponse,HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from django.db.models import Max
 from .models import *
 import random
 
@@ -57,15 +57,19 @@ def post_tag_info(req):
     image_obj.correct = image_correct
     image_obj.save()
 
-    user_obj = models.QuerySet(User).filter(id=user_id).first()
-    user_obj.
+    user = models.QuerySet(User).get(id=user_id)
+    runking = models.QuerySet(Runking).filter(User=user).first()
+    runking.point +=1
+
+
     return HttpResponse('image info update') 
 
 def post_user_info(req):
     user_name = req.POST.get('user_name')
     user = User(userName=user)
     user.save()
-    id = list(models.QuerySet(User).filter(userName=user_name).values_list('id',flat=True))[0]
-
-    user_info = models.QuerySet(User).get(id=id)
+    id = models.QuerySet(User).all().aggregate(Max('id'))
+    id = id['id__max']
+    user = models.QuerySet(User).get(id=id)
+    runking = Runking(User=user)
     return HttpResponse(id)
